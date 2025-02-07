@@ -55,14 +55,21 @@ if __name__ == '__main__':
     mapdata = makeMap(const.MAP_FILES[0])
     print(f'Map size = ({mapdata.width}, {mapdata.height})')
 
-    # スプライトグループを画面に登録し、画面を更新
-    sprite_all = unitutil.makeSprites(mapdata.map)
+    # スプライトグループを新規作成し、マップのスプライトをグループに登録する
+    sprite_all = pygame.sprite.RenderUpdates()
+    for unit in mapdata.map:
+        unit.add(sprite_all)
+    
+    # ループ
     running = True
     while running:
+        # 画面更新
         pygame.display.update()
+        # イベント制御
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+        # スプライトの更新
         sprite_all.update()
         sprite_all.draw(screen)
         pygame.display.flip()
