@@ -23,6 +23,7 @@ class Screen:
         # スプライトグループへの初期登録
         self.mapdata = map.makeMap(const.MAP_FILES[0])
         self.sprites = map.putMapIntoSpritesList(self.mapdata, 0)
+        self.sprite_all = pygame.sprite.RenderUpdates()
 
     def confirmButton(self, event)->bool:
         '''決定ボタンが押されたかどうかの判定。'''
@@ -48,7 +49,9 @@ class Screen:
 
     def updateScreen(self):
         '''画面更新。スプライトを描画し、画面フリップする。'''
-        self.sprite_all = unitutil.makeSprites(self.sprites)
+        self.sprite_all.empty()
+        for unit in self.sprites:
+            unit.add(self.sprite_all)
         self.sprite_all.update()
         self.sprite_all.draw(self.screen)
         pygame.display.flip()

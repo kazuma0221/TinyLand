@@ -1,11 +1,13 @@
 # coding: UTF-8
 from pygame import sprite, time, Surface
+from collections import deque
 from const import const
 from const.direction import Direction
+from ev import Event
 
 class Unit(sprite.Sprite):
     '''画面ユニットのクラス。'''
-    def __init__(self, image:Surface, x:int, y:int, name:str, isPassable:bool):
+    def __init__(self, image:Surface, x:int, y:int, name:str, isPassable:bool, eventlist:list=None):
         super().__init__()
         self.image = image
         self.rect = self.image.get_rect()
@@ -14,6 +16,7 @@ class Unit(sprite.Sprite):
         self.rect.x, self.rect.y = (x * const.MAP_UNIT_SIZE_X), (y * const.MAP_UNIT_SIZE_Y)
         self.name = name
         self.isPassable = isPassable
+        self.eventlist = eventlist
     
     def isAbove(self, other):
         '''自分が相手よりも高いかどうかを判定する。
@@ -48,12 +51,22 @@ class Unit(sprite.Sprite):
                 and not self.isLeftTo(other)
                 and not self.isRightTo(other)
         )
+    
+    def start(self):
+        if self.eventlist is None:
+            return False
+        self.tempEventlist = deque(self.eventlist)
+        return self.next()
+
+    def next(self):
+        self.tempEventlist.pop(0).do()
+        return len(self.tempEventlist) > 0 # イベントが残っているかどうか
 
 class AnimationUnit(Unit):
     '''アニメーションするユニットのクラス。'''
-    def __init__(self, images:list[Surface], num:int, x:int, y:int, name:str, isPassable:bool, direction:Direction, animation:bool=False):
+    def __init__(self, images:list[Surface], num:int, x:int, y:int, name:str, isPassable:bool, eventlist:list, direction:Direction, animation:bool=False):
         self.images = images
-        super().__init__(images[num], x, y, name, isPassable)
+        super().__init__(images[num], x, y, name, isPassable, eventlist)
         self.direction = direction
         self.animation = animation
     

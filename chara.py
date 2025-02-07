@@ -7,8 +7,8 @@ import move, unit
 
 class Chara(unit.AnimationUnit):
     '''キャラクタのクラス。AnimationUnitに自分の動きを追加している。'''
-    def __init__(self, images:list[Surface], chara:int, x:int, y:int, name:str, isPassable:bool, direction:Direction=Direction.DOWN):
-        super().__init__(images, chara, x, y, name, isPassable, direction, animation=True)
+    def __init__(self, images:list[Surface], chara:int, x:int, y:int, name:str, isPassable:bool, eventlist:list=None, direction:Direction=Direction.DOWN):
+        super().__init__(images, chara, x, y, name, isPassable, eventlist, direction, animation=True)
     
     def getMapX_inGrid(self):
         return int(self.map_x / const.MAP_UNIT_SIZE_X)

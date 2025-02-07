@@ -1,6 +1,4 @@
 # coding: UTF-8
-from pygame import sprite
-
 from unit import Unit
 from chara import Chara
 from util import pngutil
@@ -35,16 +33,9 @@ class UnitFactory():
         unit = Unit(self.imageList[num], x, y, name, (num in const.PASSABLE_BLOCK_LIST))
         return unit
 
-def makeSprites(units:list):
-    '''リストで渡されたスプライトを、描画更新用のスプライトグループに登録する。
-    :param list[Unit] units: 描画する全スプライト（ユニット）のリスト。
-    :rtype: None'''
-    sprite_all = sprite.RenderUpdates()
-    for unit in units:
-        unit.add(sprite_all)
-    return sprite_all
-
-def makeChara(filename:str, num:int, x:int, y:int, width:int, height:int, isPassable:bool, direction:Direction=Direction.DOWN, name:str=None):
+def makeChara(filename:str, num:int, x:int, y:int, width:int, height:int,
+              isPassable:bool, direction:Direction=Direction.DOWN, name:str=None,
+              eventlist:list=None):
     '''指定の(x, y)に、サイズを(width, height)で指定した、ファイルのnum番目のキャラを生成して返す。
     :param str filename: ファイル名。imageフォルダ配下のみを対象とするためパス不要。
     :param int num: 画像内でどのキャラを表示するかのインデックス。
@@ -54,10 +45,11 @@ def makeChara(filename:str, num:int, x:int, y:int, width:int, height:int, isPass
     :param int height: キャラ画像の高さ。
     :param bool canJump: キャラのデフォルトでのジャンプ可否。
     :param Direction direction: キャラの向き。
+    :param list eventlist: 実行するEventのリスト。
     '''
     chara = Chara(pngutil.load_chip(const.PATH_IMAGE + filename,
                                     is_alpha=True,
                                     unit_width=width,
                                     unit_height=height),
-                  num, x, y, name, isPassable, direction)
+                  num, x, y, name, isPassable, eventlist, direction)
     return chara
