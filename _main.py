@@ -12,17 +12,10 @@ class App(Screen):
     def __init__(self):
         '''初期化と画面作成。'''
         super().__init__()
-        self.testNPC = unitutil.makeChara(filename=const.CHARA_FILE, num=0,
-                                         x=5, y=6,
-                                         width=const.CHARA_SIZE_X, height=const.CHARA_SIZE_Y,
-                                         isPassable=False, name='テストNPC',
-                                         eventlist=[ev.MessageEvent('これはテストです。'), ev.CloseEvent()])
-
+        self.testNPC = unitutil.makeTestNPC(x=5, y=6)
         self.mapdata.map.append(self.testNPC)
         self.Player = unitutil.makeChara(filename=const.CHARA_FILE, num=0,
-                                         x=const.START_X, y=const.START_Y,
-                                         width=const.CHARA_SIZE_X, height=const.CHARA_SIZE_Y,
-                                         isPassable=False, name=const.PLAYER_NAME,
+                                         x=const.START_X, y=const.START_Y, name=const.PLAYER_NAME,
                                          eventlist=None)
         
     def updateScreen(self):
@@ -32,13 +25,32 @@ class App(Screen):
         self.sprites.append(self.Player)
         super().updateScreen()
 
+    def checkMapEvent(self):
+        # イベント処理中でなければ、イベントユニットを検索し、なければ戻る
+        if not self.processing:
+            self.eventUnit = unitutil.search(self.Player, self.mapdata)
+            if self.eventUnit is None:
+                return False
+            # イベントユニットがあれば、開始処理を行って次に行く
+            self.eventUnit.start()
+        
+        # 次のイベントを取得し、タイプに応じて切り分け
+        next = self.eventUnit.next()
+        if type(next) is ev.CloseEvent:
+            self.hideMessageWindow()
+            self.processing = False
+            return
+        if type(next) is ev.MessageEvent:
+            self.showMessageWindow()
+            next.do()
+        self.processing = True
+    
     def main(self):
         '''メインルーチン'''
         # 制御変数
         running = True
-        processing = False
-        eventUnit = None
-        print(self.testNPC.eventlist)
+        self.processing = False
+        self.eventUnit = None
 
         # ループ
         while running:
@@ -51,15 +63,9 @@ class App(Screen):
                     running = False
                 # 決定キー
                 if self.confirmButton(event):
-                    if not processing:
-                        eventUnit = ev.search(self.Player, self.mapdata)
-                        if eventUnit is not None:
-                            processing = eventUnit.start()
-                    else:
-                        processing = eventUnit.next()
-            
+                    self.checkMapEvent()
             # イベント処理中でなければ移動
-            if not processing:
+            if not self.processing:
                 direction = self.getDirection(pygame.key.get_pressed(), self.CM.getLeftStick())
                 if direction is not None:
                     self.Player.walk(self.mapdata, direction)

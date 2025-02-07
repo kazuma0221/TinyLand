@@ -1,5 +1,6 @@
 __pycache__/
 *.dms
 *.mid
+*.xcf
 *.png
 *.mp3

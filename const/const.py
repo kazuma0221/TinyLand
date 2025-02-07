@@ -12,6 +12,9 @@ COLOR_SKYBLUE = (120, 120, 255)
 # 音声
 PATH_SOUND = 'sound/'
 
+# メッセージ用
+MESSAGE_BACK_FILE = 'message_window_back.png'
+
 # マップ用
 MAP_UNIT_SIZE_X, MAP_UNIT_SIZE_Y, MAP_MOVE_AMOUNT = 32, 32, 1
 MAP_EMPTY = '0'

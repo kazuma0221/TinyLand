@@ -8,7 +8,6 @@ from const.direction import Direction
 from controller import ControllerManager
 import map
 # from sound import sound
-from util import unitutil
 
 class Screen:
 
@@ -24,6 +23,11 @@ class Screen:
         self.mapdata = map.makeMap(const.MAP_FILES[0])
         self.sprites = map.putMapIntoSpritesList(self.mapdata, 0)
         self.sprite_all = pygame.sprite.RenderUpdates()
+
+        # メッセージ枠の登録：読み込んで透明にしておく
+        self.message_window = pygame.image.load(const.PATH_IMAGE + const.MESSAGE_BACK_FILE)
+        self.message_window.set_alpha(0)
+        self.message_window.get_rect(topleft=(0, const.DISPLAY_UNITS_Y * const.MAP_UNIT_SIZE_Y - 100))
 
     def confirmButton(self, event)->bool:
         '''決定ボタンが押されたかどうかの判定。'''
@@ -47,6 +51,11 @@ class Screen:
             return Direction.UP
         return None
 
+    def startingDraw(self):
+        '''ループ冒頭の描画処理。'''
+        pygame.display.update()
+        self.screen.fill(pygame.Color(const.COLOR_SKYBLUE))
+    
     def updateScreen(self):
         '''画面更新。スプライトを描画し、画面フリップする。'''
         self.sprite_all.empty()
@@ -56,18 +65,19 @@ class Screen:
         self.sprite_all.draw(self.screen)
         pygame.display.flip()
 
-    def startingDraw(self):
-        '''ループ冒頭の描画処理。'''
-        pygame.display.update()
-        self.screen.fill(pygame.Color(const.COLOR_SKYBLUE))
-    
     def playMusic(self, name:str):
         '''曲が演奏中でなければ、指定した曲を再生する。'''
         if music.get_busy():
             return
         music.load('music/' + name)
         music.play()
-        
+    
+    def showMessageWindow(self):
+        self.message_window.set_alpha(100)
+
+    def hideMessageWindow(self):
+        self.message_window.set_alpha(0)
+
     def main(self):
         '''メインルーチン。'''
         running = True

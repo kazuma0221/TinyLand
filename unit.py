@@ -1,9 +1,8 @@
 # coding: UTF-8
 from pygame import sprite, time, Surface
-from collections import deque
+import copy
 from const import const
 from const.direction import Direction
-from ev import Event
 
 class Unit(sprite.Sprite):
     '''画面ユニットのクラス。'''
@@ -55,12 +54,12 @@ class Unit(sprite.Sprite):
     def start(self):
         if self.eventlist is None:
             return False
-        self.tempEventlist = deque(self.eventlist)
-        return self.next()
+        self.tempEventlist = copy.copy(self.eventlist)
 
     def next(self):
-        self.tempEventlist.pop(0).do()
-        return len(self.tempEventlist) > 0 # イベントが残っているかどうか
+        if len(self.tempEventlist) < 1:
+            return None
+        return self.tempEventlist.pop(0)
 
 class AnimationUnit(Unit):
     '''アニメーションするユニットのクラス。'''
