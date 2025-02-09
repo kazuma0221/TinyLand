@@ -26,7 +26,9 @@ class Screen:
         self.sprite_all = pygame.sprite.RenderUpdates()
 
         # メッセージの初期処理：枠を読み込んで透明にし、文字列のSurfaceを初期化する
-        self.message_window = Window(pygame.image.load(const.PATH_IMAGE + const.MESSAGE_BACK_FILE), x=0, y=(self.disp_y - const.MESSAGE_HEIGHT))
+        self.message_window = Window(pygame.image.load(const.PATH_IMAGE + const.MESSAGE_BACK_FILE),
+                                     x=const.MESSAGE_WIN_X,
+                                     y=const.MESSAGE_WIN_Y)
         self.message_window.image.set_alpha(0)
         self.strSurface = None
 
@@ -72,13 +74,13 @@ class Screen:
                 unit.add(self.sprite_all)
         self.sprite_all.update()
         self.sprite_all.draw(self.screen)
-        # メッセージ
+        # メッセージがあればテキストを表示、なければ空にする
         if self.strSurface is not None:
-            self.screen.blit(self.strSurface, (20, (self.disp_y - const.MESSAGE_HEIGHT)))
+            self.screen.blit(self.strSurface, (const.MESSAGE_START_X, const.MESSAGE_START_Y))
         else:
-            empty_surface = pygame.surface.Surface(size=(self.disp_x, const.MESSAGE_HEIGHT))
+            empty_surface = pygame.surface.Surface(size=(self.disp_x, const.MESSAGE_WIN_HEIGHT))
             empty_surface.set_alpha(0)
-            self.screen.blit(empty_surface, (0, (self.disp_y - const.MESSAGE_HEIGHT)))
+            self.screen.blit(empty_surface, (0, const.MESSAGE_WIN_HEIGHT))
         # フリップ
         pygame.display.flip()
 

@@ -75,7 +75,7 @@ def search(chara, mapdata):
     search_left, search_right = 0, (mapdata.width * const.MAP_UNIT_SIZE_X - 1)
     search_top, search_bottom = 0, (mapdata.height * const.MAP_UNIT_SIZE_Y - 1)
     if chara.direction == Direction.LEFT:
-        search_left = chara_left + const.MAP_UNIT_SIZE_X
+        search_left = chara_left - const.MAP_UNIT_SIZE_X
         search_right = chara_right
         search_top, search_bottom = chara_top, chara_bottom
     elif chara.direction == Direction.RIGHT:
@@ -84,7 +84,7 @@ def search(chara, mapdata):
         search_top, search_bottom = chara_top, chara_bottom
     elif chara.direction == Direction.UP:
         search_left, search_right = chara_left, chara_right
-        search_top = chara_top + const.MAP_UNIT_SIZE_Y
+        search_top = chara_top - const.MAP_UNIT_SIZE_Y
         search_bottom = chara_bottom
     elif chara.direction == Direction.DOWN:
         search_top = chara_top
@@ -123,7 +123,6 @@ def search(chara, mapdata):
     # 最も近いユニットを返す
     return closestUnit
 
-def makeTestNPC(x, y, direction=Direction.DOWN):
-    eventlist = [ev.TurnEvent(), ev.MessageEvent(u'武器屋なら　ここから　東ですよ。'), ev.CloseEvent()]
+def makeTestNPC(x:int, y:int, direction:Direction=Direction.DOWN, message:str=u'これはテストです。'):
     return makeChara(filename=const.CHARA_FILE, num=0, x=x, y=y, name='テストNPC', direction=direction,
-                     eventlist=eventlist)
+                     eventlist=[ev.TurnEvent(), ev.MessageEvent(message), ev.CloseEvent()])

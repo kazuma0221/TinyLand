@@ -2,7 +2,8 @@
 import pygame
 from pygame.locals import *
 
-from const import const, direction
+from const import const
+from const.direction import Direction
 import ev, map
 from util import unitutil
 from screen import Screen
@@ -12,8 +13,8 @@ class App(Screen):
     def __init__(self):
         '''初期化と画面作成。'''
         super().__init__()
-        self.mapdata.map.append(unitutil.makeTestNPC(x=5, y=6))
-        self.mapdata.map.append(unitutil.makeTestNPC(x=10, y=14, direction=direction.Direction.LEFT))
+        self.mapdata.map.append(unitutil.makeTestNPC(x=5, y=6, message=u'鉱山には　オバケが　出るんです。こわいなあ。'))
+        self.mapdata.map.append(unitutil.makeTestNPC(x=10, y=14, direction=Direction.LEFT, message=u'武器屋なら　ここから　東ですよ。'))
         self.Player = unitutil.makeChara(filename=const.CHARA_FILE, num=0,
                                          x=const.START_X, y=const.START_Y, name=const.PLAYER_NAME,
                                          eventlist=None)
