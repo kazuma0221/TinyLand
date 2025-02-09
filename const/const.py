@@ -14,6 +14,7 @@ PATH_SOUND = 'sound/'
 
 # メッセージ用
 MESSAGE_BACK_FILE = 'message_window_back.png'
+MESSAGE_HEIGHT = 180
 
 # マップ用
 MAP_UNIT_SIZE_X, MAP_UNIT_SIZE_Y, MAP_MOVE_AMOUNT = 32, 32, 1

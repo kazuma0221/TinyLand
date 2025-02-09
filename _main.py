@@ -2,7 +2,7 @@
 import pygame
 from pygame.locals import *
 
-from const import const
+from const import const, direction
 import ev, map
 from util import unitutil
 from screen import Screen
@@ -12,8 +12,8 @@ class App(Screen):
     def __init__(self):
         '''初期化と画面作成。'''
         super().__init__()
-        self.testNPC = unitutil.makeTestNPC(x=5, y=6)
-        self.mapdata.map.append(self.testNPC)
+        self.mapdata.map.append(unitutil.makeTestNPC(x=5, y=6))
+        self.mapdata.map.append(unitutil.makeTestNPC(x=10, y=14, direction=direction.Direction.LEFT))
         self.Player = unitutil.makeChara(filename=const.CHARA_FILE, num=0,
                                          x=const.START_X, y=const.START_Y, name=const.PLAYER_NAME,
                                          eventlist=None)
@@ -42,17 +42,14 @@ class App(Screen):
             return
         if type(next) is ev.MessageEvent:
             self.showMessageWindow()
-            next.do()
+            self.strSurface = next.do().strSurface
+        if type(next) is ev.TurnEvent:
+            next.do(self.eventUnit, self.Player.direction.reverse())
         self.processing = True
     
     def main(self):
         '''メインルーチン'''
-        # 制御変数
         running = True
-        self.processing = False
-        self.eventUnit = None
-
-        # ループ
         while running:
             self.playMusic('village.mid')
             self.startingDraw()

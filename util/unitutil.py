@@ -124,5 +124,6 @@ def search(chara, mapdata):
     return closestUnit
 
 def makeTestNPC(x, y, direction=Direction.DOWN):
+    eventlist = [ev.TurnEvent(), ev.MessageEvent(u'武器屋なら　ここから　東ですよ。'), ev.CloseEvent()]
     return makeChara(filename=const.CHARA_FILE, num=0, x=x, y=y, name='テストNPC', direction=direction,
-                     eventlist=[ev.MessageEvent('これはテストです。'), ev.CloseEvent()])
+                     eventlist=eventlist)

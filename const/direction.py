@@ -7,3 +7,9 @@ class Direction(IntEnum):
     DOWN = 1
     RIGHT = 2
     UP = 3
+
+    def reverse(d):
+        if d == Direction.LEFT: return Direction.RIGHT
+        elif d == Direction.DOWN: return Direction.UP
+        elif d == Direction.RIGHT: return Direction.LEFT
+        elif d == Direction.UP: return Direction.DOWN

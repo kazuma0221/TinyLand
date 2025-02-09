@@ -6,6 +6,7 @@ from pygame.locals import *
 from const import const #, soundname
 from const.direction import Direction
 from controller import ControllerManager
+from window import Window
 import map
 # from sound import sound
 
@@ -14,8 +15,8 @@ class Screen:
     def __init__(self):
         '''初期化と画面作成。'''
         pygame.init()
-        self.screen = pygame.display.set_mode((const.DISPLAY_UNITS_X * const.MAP_UNIT_SIZE_X,
-                                        const.DISPLAY_UNITS_Y * const.MAP_UNIT_SIZE_Y))
+        self.disp_x, self.disp_y = (const.DISPLAY_UNITS_X * const.MAP_UNIT_SIZE_X), (const.DISPLAY_UNITS_Y * const.MAP_UNIT_SIZE_Y)
+        self.screen = pygame.display.set_mode((self.disp_x, self.disp_y))
         # self.sounds_dic = sound.prepareSound()
         self.CM = ControllerManager()
 
@@ -24,10 +25,14 @@ class Screen:
         self.sprites = map.putMapIntoSpritesList(self.mapdata, 0)
         self.sprite_all = pygame.sprite.RenderUpdates()
 
-        # メッセージ枠の登録：読み込んで透明にしておく
-        self.message_window = pygame.image.load(const.PATH_IMAGE + const.MESSAGE_BACK_FILE)
-        self.message_window.set_alpha(0)
-        self.message_window.get_rect(topleft=(0, const.DISPLAY_UNITS_Y * const.MAP_UNIT_SIZE_Y - 100))
+        # メッセージの初期処理：枠を読み込んで透明にし、文字列のSurfaceを初期化する
+        self.message_window = Window(pygame.image.load(const.PATH_IMAGE + const.MESSAGE_BACK_FILE), x=0, y=(self.disp_y - const.MESSAGE_HEIGHT))
+        self.message_window.image.set_alpha(0)
+        self.strSurface = None
+
+        # 制御変数
+        self.processing = False
+        self.eventUnit = None
 
     def confirmButton(self, event)->bool:
         '''決定ボタンが押されたかどうかの判定。'''
@@ -58,11 +63,23 @@ class Screen:
     
     def updateScreen(self):
         '''画面更新。スプライトを描画し、画面フリップする。'''
-        self.sprite_all.empty()
-        for unit in self.sprites:
-            unit.add(self.sprite_all)
+        # メッセージ枠
+        self.sprites.append(self.message_window)
+        # 全ユニットのスプライト
+        if not self.processing:
+            self.sprite_all.empty()
+            for unit in self.sprites:
+                unit.add(self.sprite_all)
         self.sprite_all.update()
         self.sprite_all.draw(self.screen)
+        # メッセージ
+        if self.strSurface is not None:
+            self.screen.blit(self.strSurface, (20, (self.disp_y - const.MESSAGE_HEIGHT)))
+        else:
+            empty_surface = pygame.surface.Surface(size=(self.disp_x, const.MESSAGE_HEIGHT))
+            empty_surface.set_alpha(0)
+            self.screen.blit(empty_surface, (0, (self.disp_y - const.MESSAGE_HEIGHT)))
+        # フリップ
         pygame.display.flip()
 
     def playMusic(self, name:str):
@@ -73,10 +90,11 @@ class Screen:
         music.play()
     
     def showMessageWindow(self):
-        self.message_window.set_alpha(100)
+        self.message_window.image.set_alpha(255)
 
     def hideMessageWindow(self):
-        self.message_window.set_alpha(0)
+        self.strSurface = None
+        self.message_window.image.set_alpha(0)
 
     def main(self):
         '''メインルーチン。'''
