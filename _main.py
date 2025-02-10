@@ -13,10 +13,10 @@ class App(Screen):
     def __init__(self):
         '''初期化と画面作成。'''
         super().__init__()
-        self.mapdata.map.append(unitutil.makeTestNPC(x=5, y=6, filename=const.CHARA_FILE_F03,
-                                                     message=u'鉱山には　オバケが　出るんです。こわいなあ。'))
-        self.mapdata.map.append(unitutil.makeTestNPC(x=10, y=14, filename=const.CHARA_FILE_M12, direction=Direction.LEFT,
-                                                     message=u'武器屋なら　ここから　東ですよ。'))
+        # テスト用NPCをマップに追加
+        testNPCs = unitutil.readNPC(self.mapdata)
+        self.mapdata.map.extend(testNPCs)
+        # プレイヤーキャラを生成
         self.Player = unitutil.makeChara(filename=const.CHARA_FILE_PLAYER, num=0,
                                          x=const.START_X, y=const.START_Y, name=const.PLAYER_NAME,
                                          eventlist=None)
@@ -72,7 +72,7 @@ class App(Screen):
                 # 決定キー
                 if self.confirmButton(event):
                     self.checkMapEvent()
-            # イベント処理中でなければ移動
+            # イベント処理中でなければ、プレイヤーキャラが移動する
             if not self.processing:
                 direction = self.getDirection(pygame.key.get_pressed(), self.CM.getLeftStick())
                 if direction is not None:

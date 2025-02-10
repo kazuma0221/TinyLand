@@ -3,7 +3,8 @@
 
 # 画面・画像全般
 DISPLAY_UNITS_X, DISPLAY_UNITS_Y = 21, 21    # 画面の大きさをマス数で定義
-PATH_IMAGE = 'image/'
+DIR_IMAGE = 'image/'
+DIR_MAP = 'map/'
 COLOR_SKYBLUE = (120, 120, 255)
 COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)
@@ -20,7 +21,7 @@ MESSAGE_FONT_SIZE = 26
 
 # マップ
 MAP_UNIT_SIZE_X, MAP_UNIT_SIZE_Y, MAP_MOVE_AMOUNT = 32, 32, 1
-MAP_FILES = ['map_test.txt']
+MAP_FILES = ['maptest.tsv']
 TILE_FILE = 'tiles_01.png'
 MAP_EMPTY = '0'
 MAP_BLOCK = '103'
@@ -32,6 +33,7 @@ CHARA_SIZE_X, CHARA_SIZE_Y = 32, 32 # キャラクタのサイズ
 CHARA_FILE_PLAYER = 'Player.png'
 CHARA_FILE_F03 = 'chara_f_03.png'
 CHARA_FILE_M12 = 'chara_m_12.png'
+NPC_FILE = 'NPCs.tsv'
 
 # プレイヤー制御
 START_X, START_Y = 10, 10 # 主人公の基準位置

@@ -1,5 +1,6 @@
 # coding: UTF-8
 import numpy as np
+import csv, random
 from turfpy.measurement import boolean_point_in_polygon
 from geojson import Point, Polygon, Feature
 
@@ -22,7 +23,7 @@ class UnitFactory():
         if self.instance is None:
             self.instance = super().__new__(self)
         self.imageList = pngutil.load_chip(
-            const.PATH_IMAGE + const.TILE_FILE,
+            const.DIR_IMAGE + const.TILE_FILE,
             is_alpha=True,
             unit_width=const.MAP_UNIT_SIZE_X,
             unit_height=const.MAP_UNIT_SIZE_Y)
@@ -52,7 +53,7 @@ def makeChara(filename:str, num:int, x:int, y:int, width:int=const.CHARA_SIZE_X,
     :param Direction direction: キャラの向き。
     :param list eventlist: 実行するEventのリスト。
     '''
-    chara = Chara(pngutil.load_chip(const.PATH_IMAGE + filename,
+    chara = Chara(pngutil.load_chip(const.DIR_IMAGE + filename,
                                     is_alpha=True,
                                     unit_width=width,
                                     unit_height=height),
@@ -124,3 +125,17 @@ def search(chara, mapdata):
 def makeTestNPC(x:int, y:int, filename:str=const.CHARA_FILE_PLAYER, direction:Direction=Direction.DOWN, message:str=u'これはテストです。'):
     return makeChara(filename=filename, num=0, x=x, y=y, name='テストNPC', direction=direction,
                      eventlist=[ev.TurnEvent(), ev.MessageEvent(message), ev.CloseEvent()])
+
+def readNPC(mapdata):
+    # NPCのデータファイルから、mapdataのidに一致するデータに限り、各NPCを辞書として持つリストを読み込む。
+    # 戻り値はCharaのリストとして返す。
+    NPCFilePath = const.DIR_MAP + const.NPC_FILE
+    with open(NPCFilePath, encoding='UTF-8', mode='r') as f:
+        NPCs = [line for line in csv.DictReader(f, delimiter='\t') if line['mapid'] == mapdata.id]
+    
+    # 当該マップのNPCを順に生成する
+    # TODO: NPCの向きをtsvファイルのdirectionから読めるようにする→ファイルに整数値をもたせる？
+    return [makeTestNPC(x=int(npc['x']), y=int(npc['y']),
+                     filename='chara_'+npc['graphic']+'.png',
+                     direction=random.randint(0, 3),
+                     message=npc['message']) for npc in NPCs]

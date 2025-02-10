@@ -24,7 +24,7 @@ class Screen:
         self.sprite_all = pygame.sprite.RenderUpdates()
 
         # メッセージの初期処理：枠を読み込んで透明にし、文字列のSurfaceを初期化する
-        self.message_window = Window(pygame.image.load(const.PATH_IMAGE + const.MESSAGE_BACK_FILE),
+        self.message_window = Window(pygame.image.load(const.DIR_IMAGE + const.MESSAGE_BACK_FILE),
                                      x=const.MESSAGE_WIN_X,
                                      y=const.MESSAGE_WIN_Y)
         self.message_window.image.set_alpha(0)

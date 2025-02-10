@@ -8,17 +8,19 @@ from unit import Unit
 
 @dataclass
 class MapData:
+    id: str
     map: list[Unit] # Unitの1次元リスト。2次元ではないので注意
     width: int
     height: int
 
-def makeMap(mapfile) -> MapData:
+def makeMap(mapfile:str) -> MapData:
     '''mapディレクトリ内の指定ファイルからMapDataを作成する。
     :param mapfile: 読み込むマップのTSVファイル名。
     :param tilefile: 読み込むタイルの画像ファイル名。
     :rtype: MapData'''
 
     # ファイル読込
+    map_id = mapfile.replace('.tsv', '')
     filepath = 'map/' + mapfile
     with open(filepath, encoding='UTF-8', mode='r') as f:
         map = [line for line in csv.reader(f, delimiter='\t')]
@@ -35,9 +37,9 @@ def makeMap(mapfile) -> MapData:
             factory.make(int(unit), x, y)
             for x, unit in enumerate(line)
             if unit != const.MAP_EMPTY])
-    return MapData(mapList, map_width, map_height)
+    return MapData(map_id, mapList, map_width, map_height)
 
-def putMapIntoSpritesList(mapData, start_x):
+def putMapIntoSpritesList(mapData:MapData, start_x):
     WholeMap = copy.copy(mapData.map)
     sprites = []
     for unit in WholeMap:
@@ -53,7 +55,8 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((const.DISPLAY_UNITS_X * const.MAP_UNIT_SIZE_X,
                                     const.DISPLAY_UNITS_Y * const.MAP_UNIT_SIZE_Y))
     mapdata = makeMap(const.MAP_FILES[0])
-    print(f'Map size = ({mapdata.width}, {mapdata.height})')
+    print(f'Map ID: {mapdata.id}')
+    print(f'Map size: ({mapdata.width}, {mapdata.height})')
 
     # スプライトグループを新規作成し、マップのスプライトをグループに登録する
     sprite_all = pygame.sprite.RenderUpdates()
