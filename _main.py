@@ -13,9 +13,11 @@ class App(Screen):
     def __init__(self):
         '''初期化と画面作成。'''
         super().__init__()
-        self.mapdata.map.append(unitutil.makeTestNPC(x=5, y=6, message=u'鉱山には　オバケが　出るんです。こわいなあ。'))
-        self.mapdata.map.append(unitutil.makeTestNPC(x=10, y=14, direction=Direction.LEFT, message=u'武器屋なら　ここから　東ですよ。'))
-        self.Player = unitutil.makeChara(filename=const.CHARA_FILE, num=0,
+        self.mapdata.map.append(unitutil.makeTestNPC(x=5, y=6, filename=const.CHARA_FILE_F03,
+                                                     message=u'鉱山には　オバケが　出るんです。こわいなあ。'))
+        self.mapdata.map.append(unitutil.makeTestNPC(x=10, y=14, filename=const.CHARA_FILE_M12, direction=Direction.LEFT,
+                                                     message=u'武器屋なら　ここから　東ですよ。'))
+        self.Player = unitutil.makeChara(filename=const.CHARA_FILE_PLAYER, num=0,
                                          x=const.START_X, y=const.START_Y, name=const.PLAYER_NAME,
                                          eventlist=None)
         
@@ -35,17 +37,25 @@ class App(Screen):
             # イベントユニットがあれば、開始処理を行って次に行く
             self.eventUnit.start()
         
-        # 次のイベントを取得し、タイプに応じて切り分け
-        next = self.eventUnit.next()
-        if type(next) is ev.CloseEvent:
-            self.hideMessageWindow()
-            self.processing = False
-            return
-        if type(next) is ev.MessageEvent:
-            self.showMessageWindow()
-            self.strSurface = next.do().strSurface
-        if type(next) is ev.TurnEvent:
-            next.do(self.eventUnit, self.Player.direction.reverse())
+        # イベントを逐次実行する
+        # 途中で決定ボタン入力を挟む場合、eventIsFlowingをFalseにする
+        eventIsFlowing = True
+        while eventIsFlowing:
+            # 次のイベントを取得し、タイプに応じて切り分け
+            next = self.eventUnit.next()
+            # イベント終了
+            if type(next) is ev.CloseEvent:
+                self.hideMessageWindow()
+                self.processing = False
+                return
+            # メッセージ
+            if type(next) is ev.MessageEvent:
+                self.showMessageWindow()
+                self.strSurface = next.do().strSurface
+                eventIsFlowing = False
+            # 方向転換
+            if type(next) is ev.TurnEvent:
+                next.do(self.eventUnit, self.Player.direction.reverse())
         self.processing = True
     
     def main(self):

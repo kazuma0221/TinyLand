@@ -3,12 +3,11 @@ import pygame
 from pygame.mixer import music
 from pygame.locals import *
 
-from const import const #, soundname
+from const import const
 from const.direction import Direction
 from controller import ControllerManager
 from window import Window
 import map
-# from sound import sound
 
 class Screen:
 
@@ -17,7 +16,6 @@ class Screen:
         pygame.init()
         self.disp_x, self.disp_y = (const.DISPLAY_UNITS_X * const.MAP_UNIT_SIZE_X), (const.DISPLAY_UNITS_Y * const.MAP_UNIT_SIZE_Y)
         self.screen = pygame.display.set_mode((self.disp_x, self.disp_y))
-        # self.sounds_dic = sound.prepareSound()
         self.CM = ControllerManager()
 
         # スプライトグループへの初期登録

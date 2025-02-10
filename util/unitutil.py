@@ -107,13 +107,11 @@ def search(chara, mapdata):
         if not boolean_point_in_polygon(Feature(geometry=Point(unit_center)), polygon):
             continue
         # ユニットが範囲に引っかかっていれば、距離を計算してユニットを保存
-        # print(chara_center, unit_center)
         chara_center_array = np.array(list(chara_center))
         unit_center_array = np.array(list(unit_center))
         if closestUnit is None:
             closestUnit = unit
             distance = np.linalg.norm(chara_center_array - unit_center_array)
-            # print(closestUnit)
         else:
             new_distance = np.linalg.norm(chara_center_array - unit_center_array)
             if new_distance < distance:
@@ -123,6 +121,6 @@ def search(chara, mapdata):
     # 最も近いユニットを返す
     return closestUnit
 
-def makeTestNPC(x:int, y:int, direction:Direction=Direction.DOWN, message:str=u'これはテストです。'):
-    return makeChara(filename=const.CHARA_FILE, num=0, x=x, y=y, name='テストNPC', direction=direction,
+def makeTestNPC(x:int, y:int, filename:str=const.CHARA_FILE_PLAYER, direction:Direction=Direction.DOWN, message:str=u'これはテストです。'):
+    return makeChara(filename=filename, num=0, x=x, y=y, name='テストNPC', direction=direction,
                      eventlist=[ev.TurnEvent(), ev.MessageEvent(message), ev.CloseEvent()])
