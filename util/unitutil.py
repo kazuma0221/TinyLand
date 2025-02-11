@@ -39,12 +39,11 @@ class UnitFactory():
         unit = Unit(self.imageList[num], x, y, name, (num in const.PASSABLE_BLOCK_LIST))
         return unit
 
-def makeChara(filename:str, num:int, x:int, y:int, width:int=const.CHARA_SIZE_X, height:int=const.CHARA_SIZE_Y,
+def makeChara(filename:str, x:int, y:int, width:int=const.CHARA_SIZE_X, height:int=const.CHARA_SIZE_Y,
               isPassable:bool=False, direction:Direction=Direction.DOWN, name:str=None,
               eventlist:list=None):
     '''指定の(x, y)に、サイズを(width, height)で指定した、ファイルのnum番目のキャラを生成して返す。
     :param str filename: ファイル名。imageフォルダ配下のみを対象とするためパス不要。
-    :param int num: 画像内でどのキャラを表示するかのインデックス。
     :param int x: 表示するx座標。
     :param int y: 表示するy座標。
     :param int width: キャラ画像の幅。
@@ -57,7 +56,7 @@ def makeChara(filename:str, num:int, x:int, y:int, width:int=const.CHARA_SIZE_X,
                                     is_alpha=True,
                                     unit_width=width,
                                     unit_height=height),
-                  num, x, y, name, isPassable, eventlist, direction)
+                  x, y, name, isPassable, eventlist, direction)
     return chara
 
 def search(chara, mapdata):
@@ -123,7 +122,7 @@ def search(chara, mapdata):
     return closestUnit
 
 def makeTestNPC(x:int, y:int, filename:str=const.CHARA_FILE_PLAYER, direction:Direction=Direction.DOWN, message:str=u'これはテストです。'):
-    return makeChara(filename=filename, num=0, x=x, y=y, name='テストNPC', direction=direction,
+    return makeChara(filename=filename, x=x, y=y, name='テストNPC', direction=direction,
                      eventlist=[ev.TurnEvent(), ev.MessageEvent(message), ev.CloseEvent()])
 
 def readNPC(mapdata):

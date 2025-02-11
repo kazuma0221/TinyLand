@@ -63,9 +63,9 @@ class Unit(sprite.Sprite):
 
 class AnimationUnit(Unit):
     '''アニメーションするユニットのクラス。'''
-    def __init__(self, images:list[Surface], num:int, x:int, y:int, name:str, isPassable:bool, eventlist:list, direction:Direction, animation:bool=False):
+    def __init__(self, images:list[Surface], x:int, y:int, name:str, isPassable:bool, eventlist:list, direction:Direction, animation:bool=False):
         self.images = images
-        super().__init__(images[num], x, y, name, isPassable, eventlist)
+        super().__init__(images[0], x, y, name, isPassable, eventlist)
         self.direction = direction
         self.animation = animation
     

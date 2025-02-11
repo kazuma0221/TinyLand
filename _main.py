@@ -17,7 +17,7 @@ class App(Screen):
         testNPCs = unitutil.readNPC(self.mapdata)
         self.mapdata.map.extend(testNPCs)
         # プレイヤーキャラを生成
-        self.Player = unitutil.makeChara(filename=const.CHARA_FILE_PLAYER, num=0,
+        self.Player = unitutil.makeChara(filename=const.CHARA_FILE_PLAYER,
                                          x=const.START_X, y=const.START_Y, name=const.PLAYER_NAME,
                                          eventlist=None)
         
